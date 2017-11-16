@@ -12,35 +12,13 @@
 namespace badgerdb {
 
 /**
- * @brief An exception that is thrown when a header page has a PageId that is not 1.
+ * @brief An exception that is thrown when a test has failed. More info can be gained from test output.
  */
-    class HeaderPageNumberIncorrect : public BadgerDbException {
+    class TestFailedException : public BadgerDbException {
     public:
         /**
-         * Constructs a HeaderPageNumberIncorrect exception
+         * Constructs a TestFailedException exception
          */
-        explicit HeaderPageNumberIncorrect(PageId headerPageId);
-    };
-
-/**
- * @brief An exception that is thrown when a root page has a PageId that is not 2 immediately after Index creation.
- */
-    class RootPageNumberIncorrect : public BadgerDbException {
-    public:
-        /**
-         * Constructs a RootPageNumberIncorrect
-         */
-        explicit RootPageNumberIncorrect(PageId rootPageId);
-    };
-
-/**
- * @brief An exception that is thrown when an existing index does not have the expected Relation Name
- */
-    class RelationNameIncorrect : public BadgerDbException {
-    public:
-        /**
-         * Constructs a RelationNameIncorrect
-         */
-        explicit RelationNameIncorrect(std::string relationName);
+        explicit TestFailedException(std::string testName);
     };
 }

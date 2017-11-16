@@ -320,9 +320,69 @@ namespace badgerdb {
         IndexMetaInfo *ptr = (IndexMetaInfo*) headerPtr;
         relationName = ptr->relationName;
 
-        bufMgr->unPinPage(file headerPageNum, false);
+        bufMgr->unPinPage(file, headerPageNum, false);
 
         return relationName;
+    }
+
+    const int BTreeIndex::getLeafNodeOrder(PageId leafNodePageNum) {
+        int numElements;
+        Page currPage;
+        Page *currPagePtr = &currPage;
+
+        bufMgr->readPage(file, leafNodePageNum, currPagePtr);
+        LeafNodeInt *leafNodePtr = (LeafNodeInt*)currPagePtr;
+
+        int low = 0;
+        int high = INTARRAYLEAFSIZE-1;
+        while(low <= high){
+            int mid = (low + high)/2;
+            if(leafNodePtr->keyArray[mid] != 0){
+                low = mid + 1;
+            }
+            else{
+                if(leafNodePtr->keyArray[mid-1] != 0){
+                    int numElements = mid;
+                    low = high;
+                }
+                else {
+                    high = mid - 1;
+                }
+            }
+        }
+
+        bufMgr->unPinPage(file, leafNodePageNum, false);
+        return numElements;
+    }
+
+    const int BTreeIndex::getNonLeafNodeOrder(PageId nonLeafNodePageNum) {
+        int numElements;
+        Page currPage;
+        Page *currPagePtr = &currPage;
+
+        bufMgr->readPage(file, nonLeafNodePageNum, currPagePtr);
+        NonLeafNodeInt *nonLeafNodePtr = (NonLeafNodeInt*)currPagePtr;
+
+        int low = 0;
+        int high = INTARRAYNONLEAFSIZE-1;
+        while(low <= high){
+            int mid = (low + high)/2;
+            if(nonLeafNodePtr->keyArray[mid] != 0){
+                low = mid + 1;
+            }
+            else{
+                if(nonLeafNodePtr->keyArray[mid-1] != 0){
+                    int numElements = mid;
+                    low = high;
+                }
+                else {
+                    high = mid - 1;
+                }
+            }
+        }
+
+        bufMgr->unPinPage(file, nonLeafNodePageNum, false);
+        return numElements;
     }
 
 }
