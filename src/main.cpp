@@ -158,7 +158,7 @@ int main(int argc, char **argv) {
     testDeconstruction();
     //test1();
     //test2();
-    //test3();
+    test3();
     //errorTests();
 
     return 1;
