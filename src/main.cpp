@@ -83,6 +83,10 @@ void testIndexOpen();
 
 void testRootFill();
 
+void testStartScan();
+
+void testDeconstruction();
+
 void test1();
 
 void test2();
@@ -150,6 +154,8 @@ int main(int argc, char **argv) {
     testIndexCreation();
     testIndexOpen();
     testRootFill();
+    testStartScan();
+    testDeconstruction();
     //test1();
     //test2();
     //test3();
@@ -158,52 +164,144 @@ int main(int argc, char **argv) {
     return 1;
 }
 
-
 void testIndexCreation() {
+    createRelationRandom();
+
     std::cout << "Creating test index file..." << std::endl;
-    BTreeIndex index("test", intIndexName, bufMgr, offsetof(tuple, i), INTEGER);
-    if(index.getHeaderPageNum() == 1){
+    BTreeIndex index(relationName, intIndexName, bufMgr, offsetof(tuple, i), INTEGER);
+    if (index.getHeaderPageNum() == 1) {
         std::cout << "Header page made successfully" << std::endl;
-    }
-    if(index.getRootPageNum() == 2){
-        std::cout << "Initial root page made successfully." << std::endl;
-    }
-    else {
+    } else {
         std::cout << "Header page number or initial root page number incorrect." << std::endl;
+        deleteRelation();
         throw TestFailedException("IndexCreation");
     }
 
-
+    deleteRelation();
 }
 
 void testIndexOpen() {
-  std::cout << "Opening existing test file..." << std::endl;
-    BTreeIndex index("test", intIndexName, bufMgr, offsetof(tuple, i), INTEGER);
-    if(index.getRelName().compare("test") == 0){
+    createRelationRandom();
+
+    std::cout << "Opening existing test file..." << std::endl;
+    BTreeIndex index(relationName, intIndexName, bufMgr, offsetof(tuple, i), INTEGER);
+    std::string relname = index.getRelName();
+
+    if (relname.compare(relationName) == 0) {
         std::cout << "Relation name is as expected." << std::endl;
-        File::remove("test.0");
-    }
-    else{
+    } else {
         std::cout << "Relation name is not correct" << std::endl;
+        deleteRelation();
         throw TestFailedException("IndexOpen");
     }
+
+    deleteRelation();
 }
 
 void testRootFill() {
     createRelationRandom();
 
-    BTreeIndex index("relA", intIndexName, bufMgr, offsetof(tuple, i), INTEGER);
+    try{
+        File::remove("relA.0");
+    }catch (BadgerDbException e){}
+
+    BTreeIndex index(relationName, intIndexName, bufMgr, offsetof(tuple, i), INTEGER);
 
     PageId root = index.getRootPageNum();
-    if(root != 4){
+    if (root == 2) {
         std::cout << "Root node incorrectly moved from Leaf Node to Non-Leaf Node." << std::endl;
         deleteRelation();
-        File::remove("relA.0");
         throw TestFailedException("RootFill");
+    }
+    std::cout << "Root correctly Promoted to NonLeafNode. Rest of tree built using InsertEntry." << std::endl;
+    deleteRelation();
+
+}
+
+void testStartScan() {
+    createRelationRandom();
+
+    BTreeIndex index(relationName, intIndexName, bufMgr, offsetof(tuple, i), INTEGER);
+
+    int lowVal = 0;
+    int highVal = 1000;
+
+    try {
+        index.startScan(&highVal, GT, &lowVal, LT);
+    } catch (BadScanrangeException e) {
+        std::cout << "Scan correctly caught bad scan range." << std::endl;
+    }
+    try {
+        index.startScan(&lowVal, LT, &lowVal, LT);
+    } catch (BadOpcodesException e) {
+        std::cout << "Scan correctly caught bad opcodes." << std::endl;
+    }
+    try {
+        index.startScan(&lowVal, LTE, &lowVal, LTE);
+    } catch (BadOpcodesException e) {
+        std::cout << "Scan correctly caught bad opcodes." << std::endl;
+    }
+    try {
+        index.startScan(&lowVal, GT, &lowVal, GT);
+    } catch (BadOpcodesException e) {
+        std::cout << "Scan correctly caught bad opcodes." << std::endl;
+    }
+    try {
+        index.startScan(&lowVal, GTE, &lowVal, GTE);
+    } catch (BadOpcodesException e) {
+        std::cout << "Scan correctly caught bad opcodes." << std::endl;
+    }
+
+    try {
+        index.startScan(&lowVal, GT, &highVal, LT);
+    } catch (BadgerDbException e) {
+        std::cout << "Scan incorrectly started." << std::endl;
+        throw TestFailedException("StartScan");
+    }
+
+    RecordId test;
+    RecordId &ref = test;
+    index.scanNext(ref);
+    Page *ptr;
+
+    //Read Page holding actual record
+    bufMgr->readPage(file1, test.page_number, ptr);
+
+    //Get the record from the page
+    RECORD myRec = *(reinterpret_cast<const RECORD *>(ptr->getRecord(ref).data()));
+    bufMgr->unPinPage(file1, test.page_number, false);
+
+    if(myRec.i > 0){
+        std::cout << "Scan correctly started" << std::endl;
+    }
+    else{
+        std::cout << "Scan incorrectly started" << std::endl;
+        throw TestFailedException("StartScan");
     }
 
     deleteRelation();
+
+}
+
+void testDeconstruction(){
+    BTreeIndex index(relationName, intIndexName, bufMgr, offsetof(tuple, i), INTEGER);
+    if(File::isOpen("relA.0")){
+        std::cout << "Index File is Open...." << std::endl;
+    }
+
+    index.~BTreeIndex();
+    if(File::isOpen("relA.0")){
+        std::cout << "Failed to close index file." << std::endl;
+        throw TestFailedException("Deconstruction");
+    }
+
     File::remove("relA.0");
+
+    if(File::exists("relA.0")){
+        std::cout << "Deconstruction failed, File Not Closed and Deleted" << std::endl;
+        throw TestFailedException("Deconstruction");
+    }
+    std::cout << "Index Successfully Deconstructed." << std::endl;
 }
 
 void test1() {

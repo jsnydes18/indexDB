@@ -378,8 +378,6 @@ class BTreeIndex {
 	const PageId getRootPageNum();
 	const PageId getHeaderPageNum();
 	const std::string getRelName();
-	const int getLeafNodeOrder(PageId leafNodePageNum);
-	const int getNonLeafNodeOrder(PageId nonLeafNodePageNum);
 	
 };
 
