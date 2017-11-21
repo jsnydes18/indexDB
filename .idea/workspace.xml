@@ -11,16 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="726c4a39-b996-44fd-93f7-2b1b89855b9b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/badgerdb_main" afterPath="$PROJECT_DIR$/src/badgerdb_main" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lib/bufmgr.a" afterPath="$PROJECT_DIR$/src/lib/bufmgr.a" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/lib/exceptions.a" afterPath="$PROJECT_DIR$/src/lib/exceptions.a" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/obj/btree.o" afterPath="$PROJECT_DIR$/src/obj/btree.o" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/obj/exceptions/test_exception.o" afterPath="$PROJECT_DIR$/src/obj/exceptions/test_exception.o" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/obj/main.o" afterPath="$PROJECT_DIR$/src/obj/main.o" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Makefile" afterPath="$PROJECT_DIR$/Makefile" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/btree.cpp" afterPath="$PROJECT_DIR$/src/btree.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/btree.h" afterPath="$PROJECT_DIR$/src/btree.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -105,8 +98,8 @@
       <file leaf-file-name="btree.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/btree.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="318" column="49" lean-forward="false" selection-start-line="318" selection-start-column="49" selection-end-line="318" selection-end-column="49" />
+            <state relative-caret-position="430">
+              <caret line="328" column="27" lean-forward="false" selection-start-line="328" selection-start-column="27" selection-end-line="328" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -211,12 +204,12 @@
       <workItem from="1509937182019" duration="38000" />
       <workItem from="1510346017758" duration="60641000" />
       <workItem from="1510925133027" duration="9709000" />
-      <workItem from="1511044315030" duration="26138000" />
+      <workItem from="1511044315030" duration="27651000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="96526000" />
+    <option name="totallyTimeSpent" value="98039000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -627,8 +620,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/btree.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="318" column="49" lean-forward="false" selection-start-line="318" selection-start-column="49" selection-end-line="318" selection-end-column="49" />
+        <state relative-caret-position="430">
+          <caret line="328" column="27" lean-forward="false" selection-start-line="328" selection-start-column="27" selection-end-line="328" selection-end-column="27" />
           <folding />
         </state>
       </provider>

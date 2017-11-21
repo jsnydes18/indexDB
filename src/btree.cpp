@@ -288,14 +288,13 @@ namespace badgerdb {
         PageId nextNode;
         bool leafParentFound = false;
         while(!leafParentFound){
-            //In here
+            //Find Index of Correct Child
             for(int i = 0; i < INTARRAYNONLEAFSIZE; i++){
                 if(currNode->keyArray[i] > newKey){
                     nextNode = currNode->pageNoArray[i];
                     break;
                 }
                 if(currNode->keyArray[i] == -1){
-                    std::cout << "here" << std::endl;
                     nextNode = currNode->pageNoArray[i];
                     break;
                 }
@@ -309,19 +308,25 @@ namespace badgerdb {
                 }
             }
 
+            //If this node is at level 1, then it's child is a leaf
+            if(currNode->level == 1){
+                leafParentFound = true;
+            }
+
+            //unpin the current page
             bufMgr->unPinPage(file, currPageId, false);
+
+            //Move the pointer to the next node
             currPageId = nextNode;
             bufMgr->readPage(file, currPageId, currPage);
             currNode = (NonLeafNodeInt*) currPage;
-            nodesScanned[currNode->level] = currPageId;
 
-            if(currNode->level == 1){
-                std::cout << "here" << std::endl;
-                leafParentFound = true;
-            }
+            //Add this node to the list of nodes scanned
+            nodesScanned[currNode->level] = currPageId;
         }
 
 
+        ///Debug up to here
         //One Last Scan to find the leaf node
         for(int i = 0; i < INTARRAYNONLEAFSIZE; i++){
             if(currNode->keyArray[i] > newKey){
